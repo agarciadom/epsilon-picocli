@@ -1,54 +1,36 @@
-# Experimental Epsilon CLI tool
+# Command-line Epsilon interpreter
 
-This is an experiment on a command-line tool to run [Epsilon](http://eclipse.org/epsilon) programs.
-At the moment, it only supports running EOL scripts on EMF models, using `.ecore` or `.emf` ([Emfatic](https://eclipse.dev/emfatic/)) metamodels.
+Provides a [Picocli](https://picocli.info/)-based command line tool for executing Epsilon scripts
 
-## Building the program
+Uses [Micronaut Picocli](https://micronaut-projects.github.io/micronaut-picocli/latest/guide/) for automatic configuration and generation of [GraalVM native images](https://www.graalvm.org/latest/reference-manual/native-image/).
 
-To run a Java version of this program, run this command:
+## Building and trying out the Java-based version
 
-```sh
+To build as a plain Java program, run this command:
+
+```shell
 ./gradlew build
 ```
 
-The built distributions will be in the `build/distributions` folder.
-
-Typical execution time:
+You can then use the distributions in `build/distributions`, or try the script directly from Gradle with:
 
 ```shell
-$ time build/distributions/epsilon-0.1/bin/epsilon example/program.eol example/metamodel.emf example/model.flexmi 
-Analysis: 3.0
-Design: 6.0
-Implementation: 3.0
-One-person tasks: 2
-
-real    0m0.945s
-user    0m2.368s
-sys     0m0.163s
+./gradlew run --args="example/program.eol -f example/model.flexmi -m example/metamodel.emf -r"
 ```
 
-## Building the native image
+## Building and using the native image
 
-To build a GraalVM native image of this program, install GraalVM 17 or later (e.g. via [SDKMAN](https://sdkman.io/)), and run this command:
+To build the native image, install a GraalVM JDK (e.g. via [SDKMAN](https://sdkman.io/)) and run this command:
 
-```sh
+```shell
 ./gradlew nativeCompile
 ```
 
-The built native image will be the executable in `build/native/nativeCompile/epsilon`.
-
-Typical execution time:
+You can then try out the native image with a command like this one:
 
 ```shell
-$ time build/native/nativeCompile/epsilon example/program.eol example/metamodel.emf example/model.flexmi 
-Analysis: 3.0
-Design: 6.0
-Implementation: 3.0
-One-person tasks: 2
-
-real    0m0.039s
-user    0m0.015s
-sys     0m0.028s
+build/native/nativeCompile/epsilon example/program.eol \
+  -f example/model.flexmi -m example/metamodel.emf -r
 ```
 
 ## Micronaut 4.1.5 Documentation
